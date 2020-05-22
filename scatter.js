@@ -12,7 +12,7 @@ const {
 
 const svg = select("svg");
 
-const TITLE = 'Cars'
+const TITLE = 'A Week in San Francisco'
 const width = +svg.attr("width");
 const height = +svg.attr("height");
 const xValue = (d) => d.timestamp;
