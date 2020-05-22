@@ -3,12 +3,11 @@ import * as d3 from "d3";
 const {
   select,
   scaleLinear,
-  max,
+  scaleTime,
   extent,
   axisLeft,
   csv,
   axisBottom,
-  format,
 } = d3;
 
 const svg = select("svg");
@@ -16,23 +15,23 @@ const svg = select("svg");
 const TITLE = 'Cars'
 const width = +svg.attr("width");
 const height = +svg.attr("height");
-const xValue = (d) => d.horsepower;
-const xAxisLabel = 'Horsepower';
-const yValue = (d) => d.weight;
-const yAxisLabel = 'Weight';
+const xValue = (d) => d.timestamp;
+const xAxisLabel = 'Time';
+const yValue = (d) => d.temperature;
+const yAxisLabel = 'Temperature';
 const margin = { top: 30, right: 20, bottom: 70, left: 90 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
 const circleRadius = 10
 const render = (data) => {
-  const xScale = scaleLinear()
+  const xScale = scaleTime()
     .domain(extent(data, xValue))
     .range([0, innerWidth])
     .nice();
 
   const yScale = scaleLinear()
     .domain(extent(data, yValue))
-    .range([0, innerHeight])
+    .range([innerHeight,0])
     .nice()
 
   const yAxis = axisLeft(yScale)
@@ -90,16 +89,12 @@ const render = (data) => {
       .attr('class', 'title')
       .attr('y', -5);
 };
-csv("https://vizhub.com/curran/datasets/auto-mpg.csv").then((data) => {
+csv("./data/temperature-in-san-francisco.csv").then((data) => {
   data.forEach(d => {
-    d.acceleration = +d.acceleration;
-    d.cylinders = +d.cylinders;
-    d.displacement = +d.displacement;
-    d.horsepower = +d.horsepower;
-    d.mpg = +d.mpg;
-    d.weight = +d.weight;
-    d.year = +d.year;
+    d.temperature = +d.temperature;
+    d.timestamp = new Date(d.timestamp)
   });
   render(data)
 });
 
+// https://vizhub.com/curran/datasets/temperature-in-san-francisco.csv
