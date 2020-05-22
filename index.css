@@ -3,7 +3,7 @@ body {
   overflow-x: hidden;
   padding: 0;
 }
-rect {
+circle {
   fill: steelblue;
 }
 

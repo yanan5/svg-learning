@@ -18579,7 +18579,7 @@
     select: select$1,
     scaleLinear,
     max: max$3,
-    scaleBand,
+    scalePoint,
     axisLeft: axisLeft$1,
     csv: csv$2,
     axisBottom: axisBottom$1,
@@ -18600,16 +18600,18 @@
 
     const xScale = scaleLinear()
       .domain([0, max$3(data, xValue)])
-      .range([0, innerWidth]);
+      .range([0, innerWidth])
+      .nice();
 
-    const yScale = scaleBand()
+    const yScale = scalePoint()
       .domain(data.map(yValue))
       .range([0, innerHeight])
-      .padding(0.1);
+      .padding(0.7);
 
     const xAxisTickFormat = (number) => format$1(".3s")(number).replace("G", "B");
 
-    const yAxis = axisLeft$1(yScale);
+    const yAxis = axisLeft$1(yScale)
+      .tickSize(-innerWidth);
     const xAxis = axisBottom$1(xScale)
       .tickFormat(xAxisTickFormat)
       .tickSize(-innerHeight);
@@ -18620,7 +18622,7 @@
 
     g.append("g")
       .call(yAxis)
-      .selectAll(".domain, .tick line")
+      .select(".domain")
       .remove();
 
     const xAxisG = g.append("g")
@@ -18637,13 +18639,13 @@
         .attr('x', innerWidth/2)
         .attr('y', margin.bottom - 5);
 
-    g.selectAll("rect")
+    g.selectAll("circle")
       .data(data)
       .enter()
-      .append("rect")
-      .attr("y", (d) => yScale(yValue(d)))
-      .attr("width", (d) => xScale(xValue(d)))
-      .attr("height", yScale.bandwidth());
+      .append("circle")
+      .attr("cy", (d) => yScale(yValue(d)))
+      .attr("cx", (d) => xScale(xValue(d)))
+      .attr("r", 15);
 
     g.append('text')
       .text('Top 10 most populous countries')    
@@ -18652,7 +18654,6 @@
   };
   csv$2("./data/population.csv").then((data) => {
     data.forEach((d) => (d.population = d.population * 1000));
-    console.log(data);
     render(data);
   });
 
