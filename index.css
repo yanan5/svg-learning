@@ -1,13 +1,12 @@
 body {
   margin: 0;
-  overflow: hidden;
+  overflow-x: hidden;
   padding: 0;
 }
-.lines {
-  stroke: #000;
-  stroke-width: 10;
+rect {
+  fill: steelblue;
 }
-.lines path {
-  stroke: green;
-  stroke-linejoin: round;
+
+text {
+  font-size: 1.4em;
 }

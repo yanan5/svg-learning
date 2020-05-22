@@ -1,1 +1,1 @@
-import './face';
+import './barChart';
