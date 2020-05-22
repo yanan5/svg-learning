@@ -4,7 +4,7 @@ const {
   select,
   scaleLinear,
   max,
-  scalePoint,
+  extent,
   axisLeft,
   csv,
   axisBottom,
@@ -13,42 +13,55 @@ const {
 
 const svg = select("svg");
 
+const TITLE = 'Cars'
 const width = +svg.attr("width");
 const height = +svg.attr("height");
-
+const xValue = (d) => d.horsepower;
+const xAxisLabel = 'Horsepower';
+const yValue = (d) => d.weight;
+const yAxisLabel = 'Weight';
+const margin = { top: 30, right: 20, bottom: 70, left: 90 };
+const innerWidth = width - margin.left - margin.right;
+const innerHeight = height - margin.top - margin.bottom;
+const circleRadius = 10
 const render = (data) => {
-  const xValue = (d) => d.population;
-  const yValue = (d) => d.country;
-  const margin = { top: 30, right: 20, bottom: 50, left: 130 };
-  const innerWidth = width - margin.left - margin.right;
-  const innerHeight = height - margin.top - margin.bottom;
-
   const xScale = scaleLinear()
-    .domain([0, max(data, xValue)])
+    .domain(extent(data, xValue))
     .range([0, innerWidth])
     .nice();
 
-  const yScale = scalePoint()
-    .domain(data.map(yValue))
+  const yScale = scaleLinear()
+    .domain(extent(data, yValue))
     .range([0, innerHeight])
-    .padding(0.7);
-
-  const xAxisTickFormat = (number) => format(".3s")(number).replace("G", "B");
+    .nice()
 
   const yAxis = axisLeft(yScale)
-    .tickSize(-innerWidth);
+    .tickSize(-innerWidth)
+    .tickPadding(10);
+    
   const xAxis = axisBottom(xScale)
-    .tickFormat(xAxisTickFormat)
-    .tickSize(-innerHeight);
+    .tickSize(-innerHeight)
+    .tickPadding(15);
 
   const g = svg
     .append("g")
     .attr("transform", `translate(${margin.left},${margin.top})`);
 
-  g.append("g")
+  const yAxisG = g.append("g")
     .call(yAxis)
-    .select(".domain")
-    .remove();
+    
+    yAxisG
+      .select(".domain")
+        .remove();
+  
+   yAxisG.append('text')
+    .attr("transform", 'rotate(-90)')
+    .text(yAxisLabel)    
+    .attr('class', 'axis-label')
+    .attr('fill','#000')
+    .attr('text-anchor', 'middle')
+    .attr('x', -innerHeight/2)
+    .attr('y', -60)
 
   const xAxisG = g.append("g")
     .call(xAxis)
@@ -58,11 +71,11 @@ const render = (data) => {
       .remove()
   
     xAxisG.append('text')
-      .text('Population')
+      .text(xAxisLabel)
       .attr('class', 'axis-label')
       .attr('fill','#000')
       .attr('x', innerWidth/2)
-      .attr('y', margin.bottom - 5)
+      .attr('y', margin.bottom - 7)
 
   g.selectAll("circle")
     .data(data)
@@ -70,15 +83,23 @@ const render = (data) => {
     .append("circle")
     .attr("cy", (d) => yScale(yValue(d)))
     .attr("cx", (d) => xScale(xValue(d)))
-    .attr("r", 15);
+    .attr("r", circleRadius);
 
   g.append('text')
-    .text('Top 10 most populous countries')    
+    .text(TITLE)    
       .attr('class', 'title')
       .attr('y', -5);
 };
-csv("./data/population.csv").then((data) => {
-  data.forEach((d) => (d.population = d.population * 1000));
-  render(data);
+csv("https://vizhub.com/curran/datasets/auto-mpg.csv").then((data) => {
+  data.forEach(d => {
+    d.acceleration = +d.acceleration;
+    d.cylinders = +d.cylinders;
+    d.displacement = +d.displacement;
+    d.horsepower = +d.horsepower;
+    d.mpg = +d.mpg;
+    d.weight = +d.weight;
+    d.year = +d.year;
+  });
+  render(data)
 });
 

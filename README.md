@@ -1,1 +1,1 @@
-1 This bar chart shows population of the top 10 most populous countries. The data comes from the year 2018 estimate in [World Population Prospects 2017](https://esa.un.org/unpd/wpp/Download/Standard/Population/)
+1 This scatter plot shows data about cars, from [UCI Macine Learing Repository: Auto MPG Data Set](http://mlr.cs.umass.edu/ml/datasets/Auto-MPG)
