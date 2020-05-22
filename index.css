@@ -8,5 +8,20 @@ rect {
 }
 
 text {
-  font-size: 1.4em;
+  font-size: 2em;
+  font-family: sans-serif;
+}
+.tick text {  
+  font-size: 2em;
+  fill: #635F5D
+}
+.tick line {
+  stroke: #C8C0BB;
+}
+.axis-label {
+  font-size: 3em;
+  fill: #8E8883;
+}
+.title {
+  fill: #635F5D;
 }
