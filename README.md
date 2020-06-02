@@ -1,1 +1,1 @@
-1 This line chart shows one week of temperature (in degrees Celcius) in San Francisco. The data comes from [Data Canvas - Sense Your City](https://grayarea.org/initiative/data-canvas-sense-your-city/)
+1 This area chart shows population for the year 2015 (in degrees Celcius). The data comes from [vizhub.com/curran](https://vizhub.com/curran/datasets/world-population-by-year-2015.csv)
