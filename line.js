@@ -1,4 +1,5 @@
 import * as d3 from "d3";
+import { curveBasis } from "d3";
 
 const {
   select,
@@ -8,7 +9,8 @@ const {
   axisLeft,
   csv,
   axisBottom,
-  line
+  line,
+  curveBasis
 } = d3;
 
 const svg = select("svg");
@@ -79,7 +81,8 @@ const render = (data) => {
 
     const lineGenerator = line()
       .x((d) => xScale(xValue(d)))
-      .y((d) => yScale(yValue(d)));
+      .y((d) => yScale(yValue(d)))
+      .curve(curveBasis)
     
     g.append('path')
       .attr('class', 'line-path')
