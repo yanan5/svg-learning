@@ -23,7 +23,7 @@ const yAxisLabel = 'Temperature';
 const margin = { top: 30, right: 20, bottom: 70, left: 90 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
-const circleRadius = 2.5
+const circleRadius = 5
 const render = (data) => {
   const xScale = scaleTime()
     .domain(extent(data, xValue))
@@ -85,13 +85,13 @@ const render = (data) => {
       .attr('class', 'line-path')
       .attr('d', lineGenerator(data))
     
-    g.selectAll("circle")
-      .data(data)
-      .enter()
-      .append("circle")
-      .attr("cy", (d) => yScale(yValue(d)))
-      .attr("cx", (d) => xScale(xValue(d)))
-      .attr("r", circleRadius);
+    // g.selectAll("circle")
+    //   .data(data)
+    //   .enter()
+    //   .append("circle")
+    //   .attr("cy", (d) => yScale(yValue(d)))
+    //   .attr("cx", (d) => xScale(xValue(d)))
+    //   .attr("r", circleRadius);
 
   g.append('text')
     .text(TITLE)    
