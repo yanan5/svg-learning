@@ -1,5 +1,4 @@
 import * as d3 from "d3";
-import { curveBasis } from "d3";
 
 const {
   select,
@@ -9,19 +8,21 @@ const {
   axisLeft,
   csv,
   axisBottom,
-  line,
-  curveBasis
+  area,
+  curveBasis,
+  format,
+  max
 } = d3;
 
 const svg = select("svg");
 
-const TITLE = 'A Week in San Francisco'
+const TITLE = 'World Population Area Chart'
 const width = +svg.attr("width");
 const height = +svg.attr("height");
-const xValue = (d) => d.timestamp;
-const xAxisLabel = 'Time';
-const yValue = (d) => d.temperature;
-const yAxisLabel = 'Temperature';
+const xValue = (d) => d.year;
+const xAxisLabel = 'Year';
+const yValue = (d) => d.population;
+const yAxisLabel = 'Population';
 const margin = { top: 30, right: 20, bottom: 70, left: 90 };
 const innerWidth = width - margin.left - margin.right;
 const innerHeight = height - margin.top - margin.bottom;
@@ -30,18 +31,23 @@ const render = (data) => {
   const xScale = scaleTime()
     .domain(extent(data, xValue))
     .range([0, innerWidth])
-    .nice();
+    .nice()
 
   const yScale = scaleLinear()
-    .domain(extent(data, yValue))
+    .domain([0 ,max(data, yValue)])
     .range([innerHeight,0])
     .nice()
+  
+  const yAxisTickFormat = number => format(".1s")(number).replace("G", 'B')
 
   const yAxis = axisLeft(yScale)
     .tickSize(-innerWidth)
-    .tickPadding(10);
-    
+    .tickPadding(10)    
+    .tickFormat(yAxisTickFormat)
+  
+
   const xAxis = axisBottom(xScale)
+    .ticks(6)
     .tickSize(-innerHeight)
     .tickPadding(15);
 
@@ -79,34 +85,28 @@ const render = (data) => {
       .attr('x', innerWidth/2)
       .attr('y', margin.bottom - 7)
 
-    const lineGenerator = line()
-      .x((d) => xScale(xValue(d)))
-      .y((d) => yScale(yValue(d)))
-      .curve(curveBasis)
+    const areaGenerator = area()
+     .x((d) => xScale(xValue(d)))
+     .y0(innerHeight)
+     .y1(d => yScale(yValue(d)))
+     .curve(curveBasis)
     
     g.append('path')
       .attr('class', 'line-path')
-      .attr('d', lineGenerator(data))
+      .attr('d', areaGenerator(data))
     
-    // g.selectAll("circle")
-    //   .data(data)
-    //   .enter()
-    //   .append("circle")
-    //   .attr("cy", (d) => yScale(yValue(d)))
-    //   .attr("cx", (d) => xScale(xValue(d)))
-    //   .attr("r", circleRadius);
-
-  g.append('text')
+  svg.append('text')
     .text(TITLE)    
       .attr('class', 'title')
-      .attr('y', -5);
+      .attr('x', width/2)
+      .attr('y', 25);
 };
-csv("./data/temperature-in-san-francisco.csv").then((data) => {
+csv("./data/world-population-by-year-2015.csv").then((data) => {
   data.forEach(d => {
-    d.temperature = +d.temperature;
-    d.timestamp = new Date(d.timestamp)
+    d.population = +d.population;
+    d.year = new Date(d.year)
   });
   render(data)
 });
 
-// https://vizhub.com/curran/datasets/temperature-in-san-francisco.csv
+// https://vizhub.com/curran/datasets/world-population-by-year-2015.csv

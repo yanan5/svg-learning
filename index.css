@@ -3,15 +3,6 @@ body {
   overflow-x: hidden;
   padding: 0;
 }
-circle {
-  fill: red;
-  opacity: 0.4;
-}
-circle:hover {
-  fill: green;
-  opacity: 0.7;
-  cursor: pointer;
-}
 text {
   font-size: 2em;
   font-family: sans-serif;
@@ -29,9 +20,8 @@ text {
 }
 .title {
   fill: #635F5D;
+  text-anchor: middle;
 }
 .line-path {
-  fill: none;
-  stroke: steelblue;
-  stroke-linejoin: round;
+  fill: maroon;
 }
