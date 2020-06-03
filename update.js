@@ -9,41 +9,31 @@ const colorScale = scaleOrdinal()
   .range(["#BD2D28", "#F2DA57"]);
 const radiusScale = scaleOrdinal().domain(["apple", "lemon"]).range([50, 30]);
 const render = (selection, { data }) => {
-  const UPDATE_SELECTION = selection
-    .selectAll("circle")
-    .data(data, (d) => d.id);
-  const ENTER_SELECTION = UPDATE_SELECTION.enter();
-  const EXIT_SELECTION = UPDATE_SELECTION.exit();
+  const UPDATE_GROUP = selection.selectAll("g").data(data, (d) => d.id);
+  const ENTER_GROUP = UPDATE_GROUP.enter();
+  const EXIT_GROUP = UPDATE_GROUP.exit();
+
+  const g = ENTER_GROUP.append("g")  
+  .attr("transform", (d, i) => `translate(0,0)`)
+   
+  g.merge(UPDATE_GROUP)
+    .transition().delay(100)
+    .attr("transform", (d, i) => `translate(${i * 120 + 60}, 50)`)
   // make an enter selection
-  ENTER_SELECTION
-    .append("circle")
-      .attr("cx", (d, i) => i * 120 + 60)
-      .attr("cy", 50)
-      .attr("r", 0)
-    .merge(UPDATE_SELECTION)
-      .attr("fill", (d) => colorScale(d.type))
-    .transition().duration(1000)
-      .attr("r", (d) => radiusScale(d.type))
-      .attr("cx", (d, i) => i * 120 + 60)
+  g.append("circle")
+    .merge(UPDATE_GROUP.select("circle"))
+    .transition().delay(500)
+    .attr("fill", (d) => colorScale(d.type))
+    .attr("r", (d) => radiusScale(d.type));
 
-  EXIT_SELECTION.transition().duration(1000).attr("r", 0).remove();
+  // make an enter selection
+  g.append("text")
+    .merge(UPDATE_GROUP.select("text"))
+    .transition().delay(500)
+    .attr("y", 75)
+    .text((d) => d.type);
 
-  // const UPDATE_TEXT = selection.selectAll("text").data(data, d => d.id);
-  // const ENTER_TEXT = UPDATE_TEXT.enter();
-  // const EXIT_TEXT = UPDATE_TEXT.exit();
-  //   // make an enter selection
-  //   ENTER_TEXT
-  //     .append("text")
-  //       .attr("x", (d, i) => i * 120 + 60)
-  //       .attr("y", 50)
-  //     .merge(UPDATE_TEXT)
-  //     .transition().duration(1000)
-  //       .attr("x", (d, i) => i * 120 + 60)
-  //       .text(d => d.type)
-
-  //   EXIT_TEXT
-  //     .transition().duration(1000)
-  //     .remove();
+  EXIT_GROUP.transition().remove();
 };
 const makeFruit = (type) => ({ type, id: Math.random() });
 
