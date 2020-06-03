@@ -7,8 +7,20 @@ const HEIGHT = +SVG.attr("height");
 const colorScale = scaleOrdinal()
   .domain(["apple", "lemon"])
   .range(["#BD2D28", "#F2DA57"]);
-const radiusScale = scaleOrdinal().domain(["apple", "lemon"]).range([50, 30]);
+const radiusScale = scaleOrdinal()
+  .domain(["apple", "lemon"])
+  .range([50, 30]);
 const render = (selection, { data }) => {
+  const BOWL = selection
+    .selectAll('rect')
+    .data([null])
+    .enter()
+      .append('rect')
+        .attr('y', 0)
+        .attr('width', data.length * 123)
+        .attr('height', 145)
+        .attr('rx', 145 / 2)
+
   const UPDATE_GROUP = selection.selectAll("g").data(data, (d) => d.id);
   const ENTER_GROUP = UPDATE_GROUP.enter();
   const EXIT_GROUP = UPDATE_GROUP.exit();
@@ -18,7 +30,7 @@ const render = (selection, { data }) => {
    
   g.merge(UPDATE_GROUP)
     .transition().delay(100)
-    .attr("transform", (d, i) => `translate(${i * 120 + 60}, 50)`)
+    .attr("transform", (d, i) => `translate(${i * 120 + 60}, 60)`)
   // make an enter selection
   g.append("circle")
     .merge(UPDATE_GROUP.select("circle"))
@@ -29,7 +41,7 @@ const render = (selection, { data }) => {
   // make an enter selection
   g.append("text")
     .merge(UPDATE_GROUP.select("text"))
-    .transition().delay(500)
+    .transition().delay(550)
     .attr("y", 75)
     .text((d) => d.type);
 
