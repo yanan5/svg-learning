@@ -11,50 +11,58 @@ let fruits = range(5).map(() => makeFruit("apple"));
 const colorScale = scaleOrdinal()
   .domain(["apple", "lemon"])
   .range(["#BD2D28", "#F2DA57"]);
-const radiusScale = scaleOrdinal()
-  .domain(["apple", "lemon"])
-  .range([50, 30]);
-const onClickHandler = d => {
+const radiusScale = scaleOrdinal().domain(["apple", "lemon"]).range([50, 30]);
+const onMouseOverHandler = (d) => {
   selected = d.id;
-  render(SVG, {data: fruits})
-}
+  render(SVG, { data: fruits });
+};
+const onMouseOutHandler = () => {
+  selected = null;
+  render(SVG, { data: fruits });
+};
 const render = (selection, { data }) => {
   const BOWL = selection
-    .selectAll('rect')
+    .selectAll("rect")
     .data([null])
     .enter()
-      .append('rect')
-        .attr('y', 0)
-        .attr('width', data.length * 123)
-        .attr('height', 145)
-        .attr('rx', 145 / 2)
+    .append("rect")
+    .attr("y", 0)
+    .attr("width", data.length * 123)
+    .attr("height", 145)
+    .attr("rx", 145 / 2);
 
   const UPDATE_GROUP = selection.selectAll("g").data(data, (d) => d.id);
   const ENTER_GROUP = UPDATE_GROUP.enter();
   const EXIT_GROUP = UPDATE_GROUP.exit();
 
-  const g = ENTER_GROUP.append("g")  
-  .attr("transform", (d, i) => `translate(0,0)`)
-   
+  const g = ENTER_GROUP.append("g").attr(
+    "transform",
+    (d, i) => `translate(0,0)`
+  );
+
   g.merge(UPDATE_GROUP)
-    .transition().delay(100)
-    .attr("transform", (d, i) => `translate(${i * 120 + 60}, 60)`)
+    .transition()
+    .delay(100)
+    .attr("transform", (d, i) => `translate(${i * 120 + 60}, 60)`);
   // make an enter selection
   g.append("circle")
-    .merge(UPDATE_GROUP.select("circle"))    
-    .on('click', onClickHandler)
-    .style('cursor', 'pointer')
-    .attr('stroke', d => d.id === selected ? '#000' : 'none')
-    .attr('stroke-width', 5)
-    .transition().delay(500)    
+    .merge(UPDATE_GROUP.select("circle"))
+    .on("mouseover", onMouseOverHandler)
+    .on("mouseout", onMouseOutHandler)
+    .style("cursor", "pointer")
+    .attr("stroke", (d) => (d.id === selected ? "#000" : "none"))
+    .attr("stroke-width", 5)
+    .transition()
+    .delay(500)
     .attr("fill", (d) => colorScale(d.type))
-    
-    .attr("r", (d) => radiusScale(d.type))
+
+    .attr("r", (d) => radiusScale(d.type));
 
   // make an enter selection
   g.append("text")
     .merge(UPDATE_GROUP.select("text"))
-    .transition().delay(550)
+    .transition()
+    .delay(550)
     .attr("y", 75)
     .text((d) => d.type);
 
