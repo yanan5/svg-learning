@@ -6,8 +6,12 @@ body {
 .sphere {
   fill: blue;
 }
-path {
+.country {
   fill : lightgreen; /* #A0B700 */;
   stroke: black /* #000 */;
   stroke-opacity: 0.1;
 } 
+.country:hover {
+  cursor: pointer;
+  fill: red;
+}
