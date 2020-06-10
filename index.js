@@ -1,1 +1,1 @@
-import './barChart';
+import './map';

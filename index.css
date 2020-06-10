@@ -3,10 +3,11 @@ body {
   overflow-x: hidden;
   padding: 0;
 }
-rect {
-  fill: steelblue;
+.sphere {
+  fill: blue;
 }
-
-text {
-  font-size: 1.4em;
-}
+path {
+  fill : lightgreen; /* #A0B700 */;
+  stroke: black /* #000 */;
+  stroke-opacity: 0.1;
+} 
