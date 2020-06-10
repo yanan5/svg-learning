@@ -13,7 +13,7 @@ svg.append('path')
     type: "Sphere"
   }))
 
-svg.call(zoom().on('zoom' () => {
+svg.call(zoom().on('zoom', () => {
   console.log('zoom')
 }))
 
